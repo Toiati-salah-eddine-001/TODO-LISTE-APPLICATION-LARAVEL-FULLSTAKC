@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
+    private static $selectedTasks = [];
     public function dashbord(){
         return view('dashbord');
     }
@@ -65,6 +66,25 @@ class TaskController extends Controller
         session(['tasks'=>$tasks]);
         return redirect()->route('userpage')->with('success', 'Task deleted successfully');
     }
+
+    public function Progresse(Request $request,$id){
+        if($request->progresse == 'done'){
+            $update=Task::where('id',$id)->update([
+                'status'=>'completed',
+            ]);
+            if(!$update){
+                return redirect()->route('userpage')->with('error', 'Failed to state status');
+            }
+            if (in_array($id, self::$selectedTasks)) {                
+                self::$selectedTasks = array_diff(self::$selectedTasks, [$id]);
+            } else {               
+                self::$selectedTasks[] = $id;
+            }
+            session(['status' => self::$selectedTasks]);
+            return redirect()->route('userpage',['fuck'=>'Fuuuuuuuuck']);
+        }
+    }
+
     }
 
 

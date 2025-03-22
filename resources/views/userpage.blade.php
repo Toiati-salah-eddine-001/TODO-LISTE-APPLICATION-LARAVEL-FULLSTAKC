@@ -6,9 +6,21 @@
 <body class="bg-gray-100 min-h-screen font-sans">
     <div class="container mx-auto px-4 py-8 max-w-md">
         <h1 class="text-3xl font-bold text-center mb-8 text-gray-800">Todo List</h1>
-        @if (isset($is_update))
-             
-        @endif
+
+
+
+        @if (session()->has('status'))
+        @php
+            $selectedTasks = session('status');
+        @endphp
+    @else
+        @php
+            $selectedTasks = [];
+        @endphp
+    @endif
+
+
+
         <!-- Add Task Form -->
         @if (session('success'))
         <div class="flex bg-green-100 rounded-lg p-4 mb-4 text-sm text-green-700" role="alert">
@@ -64,7 +76,8 @@
                     @if (session('tasks'))
                     @forelse (session('tasks')->tasks as $task)
                     <li class="flex items-center justify-between bg-gray-100 p-3 rounded-lg shadow-sm">
-                        <span class="text-gray-700">{{$task->task}}</span>
+                        <span class="text-gray-700 @if(in_array($task->id, $selectedTasks)) line-through italic @endif">{{$task->task}}
+                        </span>
                         <div class="flex space-x-2">
                             {{-- <form method="POST" action="">
                                 @csrf
@@ -74,14 +87,20 @@
                                 </button>                           
                             </form> --}}
                             <a href="{{route('IsUpdate',['id'=>$task->id])}}">Update</a>
-                            <form  action="{{route('Delet',$task->id)}}" method="POST">
+                            <form action="{{route('Delet',$task->id)}}" method="POST">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="p-2 bg-red-700 text-red-50 rounded-full hover:bg-red-800 transition duration-300"
                                 onclick="return confirm('Are you sure you want to delete this task?')"
                                 >
                                     <x-microns-delete class="w-5 h-5"/>
-                                </button>                           
+                                </button> 
+                            </form>   
+
+                            <form action="{{route('Progresse',$task->id)}}" method="POST">
+                                @csrf
+                                @method('PUT')
+                                <input type="checkbox" name="progresse" value="done" onchange="this.form.submit()">                          
                             </form>
                         </div>
                     </li>
