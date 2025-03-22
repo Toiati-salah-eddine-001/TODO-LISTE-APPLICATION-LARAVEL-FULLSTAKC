@@ -8,7 +8,7 @@
         <h1 class="text-3xl font-bold text-center mb-8 text-gray-800">Todo List</h1>
 
 
-
+{{-- 
         @if (session()->has('status'))
         @php
             $selectedTasks = session('status');
@@ -17,6 +17,9 @@
         @php
             $selectedTasks = [];
         @endphp
+    @endif --}}
+        @if (session()->has('status'))
+        <h1>Yeeeeeeeeeeeees biiitch</h1>
     @endif
 
 
@@ -76,7 +79,13 @@
                     @if (session('tasks'))
                     @forelse (session('tasks')->tasks as $task)
                     <li class="flex items-center justify-between bg-gray-100 p-3 rounded-lg shadow-sm">
-                        <span class="text-gray-700 @if(in_array($task->id, $selectedTasks)) line-through italic @endif">{{$task->task}}
+                        {{-- <span class="text-gray-700 @if(session()->has('status') && session('status')==='completed') line-through italic @endif">{{$task->task}}
+                        </span> --}}
+                        {{-- <span class="text-gray-700 @if(in_array($task->id,$selectedTasks)) line-through italic @endif">
+                            {{$task->task}}
+                        </span> --}}
+                        <span class="text-gray-700 @if(session()->has('completedTasks') && in_array($task->id, session('completedTasks'))) line-through italic @endif">
+                            {{$task->task}}
                         </span>
                         <div class="flex space-x-2">
                             {{-- <form method="POST" action="">

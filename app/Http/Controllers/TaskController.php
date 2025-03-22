@@ -67,23 +67,48 @@ class TaskController extends Controller
         return redirect()->route('userpage')->with('success', 'Task deleted successfully');
     }
 
-    public function Progresse(Request $request,$id){
-        if($request->progresse == 'done'){
-            $update=Task::where('id',$id)->update([
-                'status'=>'completed',
-            ]);
-            if(!$update){
-                return redirect()->route('userpage')->with('error', 'Failed to state status');
-            }
-            if (in_array($id, self::$selectedTasks)) {                
-                self::$selectedTasks = array_diff(self::$selectedTasks, [$id]);
-            } else {               
-                self::$selectedTasks[] = $id;
-            }
-            session(['status' => self::$selectedTasks]);
-            return redirect()->route('userpage',['fuck'=>'Fuuuuuuuuck']);
+    // public function Progresse(Request $request,$id){
+    //     if($request->progresse == 'done'){
+    //         $update=Task::where('id',$id)->update([
+    //             'status'=>'completed',
+    //         ]);
+    //         if(!$update){
+    //             return redirect()->route('userpage')->with('error', 'Failed to state status');
+    //         }
+    //         // $checkStatus=Task::find($id);
+    //         // if (in_array($id, self::$selectedTasks)) {                
+    //         //     self::$selectedTasks = array_diff(self::$selectedTasks, [$id]);
+    //         // } else {               
+    //         //     self::$selectedTasks[] = $checkStatus->id;
+    //         // }
+    //         // session(['status' => self::$selectedTasks]);
+    //         $tasks=User::with('tasks')->find($request->user()->id);
+    //         session(['status'=>$tasks->tasks->status]);
+    //         return redirect()->route('userpage',['fuck'=>'Fuuuuuuuuck']);
+    //     }
+    // }
+
+    public function Progresse(Request $request, $id)
+{
+    if($request->progresse == 'done'){
+        $update = Task::where('id', $id)->update([
+            'status' => 'completed',
+        ]);
+
+        if(!$update){
+            return redirect()->route('userpage')->with('error', 'Failed to update status');
         }
     }
+
+    // جلب جميع المهام المكتملة
+    $completedTasks = Task::where('status', 'completed')->pluck('id')->toArray();
+
+    // تخزين IDs في الجلسة
+    session(['completedTasks' => $completedTasks]);
+
+    return redirect()->route('userpage');
+}
+
 
     }
 
