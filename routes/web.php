@@ -24,3 +24,6 @@ Route::get('/update',  [TaskController::class, 'IsUpdate'])->name('IsUpdate');
 Route::post('/update/{id}',  [TaskController::class, 'update'])->name('update');
 Route::delete('/Delet/{id}',  [TaskController::class, 'Delet'])->name('Delet');
 Route::put('/Progresse/{id}',  [TaskController::class, 'Progresse'])->name('Progresse');
+
+
+Route::get('/AdmineAllTask/{typeData?}', [TaskController::class, 'AdmineAllTask'])->name('AdmineAllTask');
